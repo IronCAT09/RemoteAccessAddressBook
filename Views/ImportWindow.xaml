@@ -1,0 +1,95 @@
+<Window x:Class="RemouteAddressBook.Views.ImportWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Импорт контактов"
+        Width="700"
+        Height="620"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        FontFamily="Segoe UI"
+        FontSize="13"
+        Background="{DynamicResource WindowBackgroundBrush}">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="FilePathBox"
+                     Grid.Column="0"
+                     Style="{StaticResource InputTextBoxStyle}"
+                     IsReadOnly="True" />
+            <Button Grid.Column="1"
+                    Content="Выбрать файл…"
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    Margin="8,0,0,0"
+                    Click="BrowseFile_Click" />
+        </Grid>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,10,0,0">
+            <TextBlock Text="Импортировать в группу:" Style="{StaticResource FieldLabelStyle}" />
+            <ComboBox x:Name="GroupComboBox" Width="220" MinHeight="26" ItemTemplate="{StaticResource NameItemTemplate}" />
+            <TextBlock x:Name="RowCountText"
+                       Margin="16,0,0,0"
+                       VerticalAlignment="Center"
+                       Foreground="{DynamicResource MutedTextBrush}" />
+        </StackPanel>
+
+        <GroupBox Grid.Row="2"
+                  Header="Соответствие колонок"
+                  Margin="0,12,0,0"
+                  BorderBrush="{DynamicResource BorderBrushLight}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="MappingList" Margin="6">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0,3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="160" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0"
+                                           Text="{Binding DisplayName}"
+                                           VerticalAlignment="Center" />
+                                <ComboBox Grid.Column="1"
+                                          MinHeight="26"
+                                          ItemsSource="{Binding Columns}"
+                                          ItemTemplate="{StaticResource NameItemTemplate}"
+                                          SelectedItem="{Binding SelectedColumn, Mode=TwoWay}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </GroupBox>
+
+        <TextBlock Grid.Row="3"
+                   TextWrapping="Wrap"
+                   Foreground="{DynamicResource MutedTextBrush}"
+                   Margin="0,10,0,0"
+                   Text="Дубликаты определяются сравнением всех сопоставленных полей, кроме паролей. Совпавшие строки не добавляются." />
+
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+            <Button x:Name="ImportButton"
+                    Content="Импортировать"
+                    Style="{StaticResource FlatButtonStyle}"
+                    IsDefault="True"
+                    IsEnabled="False"
+                    Click="Import_Click"
+                    Margin="0,0,8,0" />
+            <Button Content="Закрыть"
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    IsCancel="True"
+                    Click="Close_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

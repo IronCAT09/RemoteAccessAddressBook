@@ -1,0 +1,173 @@
+<Window x:Class="RemouteAddressBook.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Настройки"
+        Width="720"
+        Height="640"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        FontFamily="Segoe UI"
+        FontSize="13"
+        Background="{DynamicResource WindowBackgroundBrush}">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="Интерфейс" Style="{StaticResource PanelHeaderTextStyle}" Margin="0,0,0,6" />
+            <CheckBox x:Name="ShowLabelsCheckBox" Content="Показывать панель меток" Margin="0,4" />
+            <CheckBox x:Name="ShowGroupsCheckBox" Content="Показывать панель групп" Margin="0,4" />
+
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <TextBlock Text="Тема:" Style="{StaticResource FieldLabelStyle}" />
+                <RadioButton x:Name="ThemeSystemRadio"
+                             Content="Как в системе"
+                             GroupName="Theme"
+                             Margin="0,0,16,0"
+                             Checked="Theme_Changed" />
+                <RadioButton x:Name="ThemeLightRadio"
+                             Content="Светлая"
+                             GroupName="Theme"
+                             Margin="0,0,16,0"
+                             Checked="Theme_Changed" />
+                <RadioButton x:Name="ThemeDarkRadio"
+                             Content="Тёмная"
+                             GroupName="Theme"
+                             Checked="Theme_Changed" />
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Margin="0,14,0,0">
+            <TextBlock Text="База данных" Style="{StaticResource PanelHeaderTextStyle}" Margin="0,0,0,6" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="DatabasePathBox" Grid.Column="0" Style="{StaticResource InputTextBoxStyle}" />
+                <Button Grid.Column="1"
+                        Content="Обзор…"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Margin="8,0,0,0"
+                        Click="BrowseDatabase_Click" />
+            </Grid>
+            <TextBlock Text="Если путь пустой — используется addressbook.db рядом с программой. Смена пути применится сразу."
+                       Foreground="{DynamicResource MutedTextBrush}"
+                       TextWrapping="Wrap"
+                       Margin="0,6,0,0" />
+        </StackPanel>
+
+        <GroupBox Grid.Row="2"
+                  Header="Команды подключения"
+                  Margin="0,14,0,0"
+                  BorderBrush="{DynamicResource BorderBrushLight}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Margin="6">
+                    <TextBlock TextWrapping="Wrap"
+                               Foreground="{DynamicResource MutedTextBrush}"
+                               Margin="0,0,0,8"
+                               Text="Плейсхолдеры: {id} — идентификатор из ячейки, {password} — пароль строки, {login} — RDP-логин. Значения по умолчанию помечены как «проверить/уточнить синтаксис» — сверьтесь с документацией вашей версии программы." />
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <Button Content="Найти установленные"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                MinWidth="170"
+                                Click="Discover_Click" />
+                        <TextBlock x:Name="DiscoverStatusText"
+                                   Margin="10,0,0,0"
+                                   VerticalAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   Foreground="{DynamicResource MutedTextBrush}" />
+                    </StackPanel>
+
+                    <ItemsControl x:Name="ToolsList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="{DynamicResource BorderBrushLight}"
+                                        BorderThickness="1"
+                                        CornerRadius="3"
+                                        Padding="10"
+                                        Margin="0,0,0,10">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="110" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0"
+                                                   Grid.Column="0"
+                                                   Grid.RowSpan="3"
+                                                   Text="{Binding DisplayName}"
+                                                   FontWeight="SemiBold"
+                                                   VerticalAlignment="Top"
+                                                   Margin="0,4,8,0" />
+
+                                        <TextBox Grid.Row="0"
+                                                 Grid.Column="1"
+                                                 Style="{StaticResource InputTextBoxStyle}"
+                                                 Margin="0,0,0,6"
+                                                 ToolTip="Путь к исполняемому файлу"
+                                                 Text="{Binding ExePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                        <Button Grid.Row="0"
+                                                Grid.Column="2"
+                                                Content="Обзор…"
+                                                Style="{StaticResource SecondaryButtonStyle}"
+                                                Margin="8,0,0,6"
+                                                Click="BrowseExe_Click" />
+
+                                        <TextBox Grid.Row="1"
+                                                 Grid.Column="1"
+                                                 Grid.ColumnSpan="2"
+                                                 Style="{StaticResource InputTextBoxStyle}"
+                                                 ToolTip="Шаблон аргументов командной строки"
+                                                 Text="{Binding Arguments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                        <StackPanel Grid.Row="2"
+                                                    Grid.Column="1"
+                                                    Grid.ColumnSpan="2"
+                                                    Orientation="Horizontal"
+                                                    Margin="0,6,0,0">
+                                            <CheckBox Content="Передавать пароль в stdin"
+                                                      Margin="0,0,16,0"
+                                                      IsChecked="{Binding PasswordToStdin, Mode=TwoWay}" />
+                                            <CheckBox Content="Сохранять учётные данные через cmdkey"
+                                                      Margin="0,0,16,0"
+                                                      IsChecked="{Binding UseCmdKey, Mode=TwoWay}" />
+                                            <CheckBox Content="Копировать ID в буфер и просто запустить"
+                                                      ToolTip="ID не передаётся в аргументах: он копируется в буфер обмена, программа запускается без параметров"
+                                                      IsChecked="{Binding CopyIdToClipboard, Mode=TwoWay}" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </GroupBox>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+            <Button Content="Сохранить"
+                    Style="{StaticResource FlatButtonStyle}"
+                    IsDefault="True"
+                    Click="Save_Click"
+                    Margin="0,0,8,0" />
+            <Button Content="Отмена"
+                    Style="{StaticResource SecondaryButtonStyle}"
+                    IsCancel="True"
+                    Click="Cancel_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

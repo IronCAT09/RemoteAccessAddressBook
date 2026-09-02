@@ -1,0 +1,15 @@
+# Сборка
+bin/
+obj/
+
+# Данные и настройки приложения
+*.db
+*.db-shm
+*.db-wal
+settings.json
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo

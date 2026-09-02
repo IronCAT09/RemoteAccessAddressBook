@@ -1,0 +1,33 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- Светлая палитра. Ключи должны совпадать с Dark.xaml. -->
+    <sys:String x:Key="PaletteName">Light</sys:String>
+
+    <SolidColorBrush x:Key="AccentBrush" Color="#FF1E7BC8" />
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="#FF3E9BE8" />
+
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="PanelBackgroundBrush" Color="#FFF3F3F3" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="GridHeaderBrush" Color="#FFF7F7F7" />
+    <SolidColorBrush x:Key="HoverBrush" Color="#FFE1EEF9" />
+    <SolidColorBrush x:Key="ListHoverBrush" Color="#FFF0F6FC" />
+
+    <SolidColorBrush x:Key="BorderBrushLight" Color="#FFD4D4D4" />
+    <SolidColorBrush x:Key="TextBrush" Color="#FF202020" />
+    <SolidColorBrush x:Key="MutedTextBrush" Color="#FF808080" />
+    <SolidColorBrush x:Key="DangerBrush" Color="#FFD64545" />
+
+    <SolidColorBrush x:Key="SelectionBrush" Color="#FFFFF6C2" />
+    <SolidColorBrush x:Key="SelectionBorderBrush" Color="#FFE3D48A" />
+    <SolidColorBrush x:Key="SelectionTextBrush" Color="#FF202020" />
+
+    <SolidColorBrush x:Key="SecondaryButtonBrush" Color="#FFE8E8E8" />
+    <SolidColorBrush x:Key="SecondaryButtonHoverBrush" Color="#FFDCDCDC" />
+    <SolidColorBrush x:Key="DisabledBrush" Color="#FFBFBFBF" />
+    <SolidColorBrush x:Key="ScrollBarThumbBrush" Color="#FFC2C2C2" />
+    <SolidColorBrush x:Key="ScrollBarThumbHoverBrush" Color="#FF9A9A9A" />
+
+</ResourceDictionary>
