@@ -108,7 +108,15 @@ namespace RemouteAddressBook.ViewModels
         /// <summary>Запуск программы по клику на её иконке.</summary>
         public ICommand LaunchToolCommand { get; }
 
-        public string Version => "1.0.0";
+        /// <summary>Версия берётся из сборки, чтобы не дублировать её в коде.</summary>
+        public string Version
+        {
+            get
+            {
+                var version = typeof(MainViewModel).Assembly.GetName().Version;
+                return version == null ? string.Empty : version.ToString(3);
+            }
+        }
 
         /// <summary>Режим оформления: System / Light / Dark.</summary>
         public AppTheme Theme
