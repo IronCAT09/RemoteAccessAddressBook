@@ -113,6 +113,38 @@
         </Setter>
     </Style>
 
+    <!-- Иконка программы над таблицей: клик запускает программу -->
+    <Style x:Key="ToolIconButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="2" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Root"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource HoverBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Root" Property="Background" Value="{DynamicResource SelectionBrush}" />
+                        </Trigger>
+                        <!-- Программа не найдена: ни подсветки, ни курсора-руки -->
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Cursor" Value="Arrow" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- Заголовок панели -->
     <Style x:Key="PanelHeaderTextStyle" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
@@ -167,6 +199,7 @@
         <Setter Property="CanUserAddRows" Value="False" />
         <Setter Property="CanUserDeleteRows" Value="False" />
         <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="CanUserResizeColumns" Value="True" />
         <Setter Property="SelectionMode" Value="Single" />
         <Setter Property="SelectionUnit" Value="FullRow" />
         <Setter Property="HeadersVisibility" Value="Column" />
@@ -214,6 +247,20 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Полоска захвата на границе заголовков колонок -->
+    <Style x:Key="ColumnHeaderGripperStyle" TargetType="Thumb">
+        <Setter Property="Width" Value="8" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Cursor" Value="SizeWE" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Thumb">
+                    <Border Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="ContactsGridHeaderStyle" TargetType="DataGridColumnHeader">
         <Setter Property="Background" Value="{DynamicResource GridHeaderBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
@@ -225,12 +272,22 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="DataGridColumnHeader">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            Padding="{TemplateBinding Padding}">
-                        <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Left" />
-                    </Border>
+                    <Grid>
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Left" />
+                        </Border>
+
+                        <!-- Захваты для изменения ширины колонки мышью -->
+                        <Thumb x:Name="PART_LeftHeaderGripper"
+                               HorizontalAlignment="Left"
+                               Style="{StaticResource ColumnHeaderGripperStyle}" />
+                        <Thumb x:Name="PART_RightHeaderGripper"
+                               HorizontalAlignment="Right"
+                               Style="{StaticResource ColumnHeaderGripperStyle}" />
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

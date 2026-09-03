@@ -115,21 +115,35 @@ namespace RemouteAddressBook.Services
         }
 
         /// <summary>Путь указывает на существующий файл или на файл, который найдётся в PATH.</summary>
-        public static bool IsUsablePath(string path)
+        public static bool IsUsablePath(string path) => ResolveExecutable(path) != null;
+
+        /// <summary>
+        /// Приводит путь из настроек к полному пути существующего файла:
+        /// либо это готовый путь, либо имя файла, которое ищется в PATH.
+        /// Возвращает null, если файла нет.
+        /// </summary>
+        public static string ResolveExecutable(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
             {
-                return false;
+                return null;
             }
 
-            path = path.Trim();
-            if (File.Exists(path))
+            path = path.Trim().Trim('"');
+            try
             {
-                return true;
+                if (File.Exists(path))
+                {
+                    return Path.GetFullPath(path);
+                }
+            }
+            catch (Exception)
+            {
+                return null;
             }
 
             // Голое имя файла имеет смысл, только если оно есть в PATH.
-            return !Path.IsPathRooted(path) && FindInPath(new[] { path }) != null;
+            return Path.IsPathRooted(path) ? null : FindInPath(new[] { path });
         }
 
         /// <summary>HKLM/HKCU ...\App Paths\&lt;exe&gt; — путь, который Windows использует для «Выполнить».</summary>

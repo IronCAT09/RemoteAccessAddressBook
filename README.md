@@ -52,6 +52,15 @@ dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=
   и сохраняется в `settings.json` (`"Theme": "System" | "Light" | "Dark"`).
   Системные диалоги (сообщения, выбор файла) рисует Windows — они остаются в
   оформлении системы.
+- **Ширина колонок** меняется перетаскиванием границы в шапке таблицы и запоминается
+  между запусками (в `settings.json`, секция `ColumnWidths`). Колонки «Пароль» и
+  «RDP Пароль» существуют парами (маска и открытый текст) и имеют общую ширину.
+- **Панель иконок** над таблицей показывает программы удалённого доступа: яркая
+  иконка — программа найдена на компьютере (в подсказке полный путь), бледная
+  заглушка с буквой — не найдена, путь нужно указать в настройках. Иконка берётся
+  из самого exe; список обновляется при запуске и после сохранения настроек.
+  **Клик по иконке запускает программу** (без подключения к контакту); если путь не
+  найден, показывается сообщение с подсказкой, где его задать.
 - «Показать пароли» переключает колонки «Пароль» / «RDP Пароль» между маской и
   значением.
 - Двойной клик по ячейке AnyDesk / Rudesktop / Ассистент / AmmyyAdmin / RDP запускает
@@ -154,8 +163,9 @@ Linux (`/opt/assistant/bin/assistant`) — те же параметры плюс
 Models/      Contact, GroupItem, LabelItem, AppSettings, ToolConfig, ToolKeys
 Data/        Database — SQLite: схема и CRUD
 Services/    SettingsService, ConnectionService, ImportService, ThemeService,
-             ToolDiscoveryService, IDialogService
-ViewModels/  MainViewModel, RelayCommand, ToolSettingRow, ImportMappingRow
+             ToolDiscoveryService, AppIconService, IDialogService
+ViewModels/  MainViewModel, RelayCommand, ToolSettingRow, ImportMappingRow,
+             ToolStatusItem
 Views/       MainWindow, ContactEditWindow, SettingsWindow, ImportWindow,
              TextPromptWindow, DialogService
 Styles/      Light.xaml / Dark.xaml — палитры (подменяются на лету),

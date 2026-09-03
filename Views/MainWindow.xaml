@@ -251,6 +251,60 @@
                         <Button Style="{StaticResource SecondaryButtonStyle}"
                                 Content="Импорт CSV/XLSX"
                                 Command="{Binding ImportCommand}" />
+
+                        <!-- Найденные на компьютере программы: яркая иконка — найдена, бледная — нет -->
+                        <ItemsControl ItemsSource="{Binding ToolStatuses}"
+                                      Margin="16,0,0,0"
+                                      VerticalAlignment="Center">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Width="30"
+                                            Height="30"
+                                            Margin="2,0"
+                                            Style="{StaticResource ToolIconButtonStyle}"
+                                            Command="{Binding DataContext.LaunchToolCommand,
+                                                              RelativeSource={RelativeSource AncestorType=Window}}"
+                                            CommandParameter="{Binding Key}"
+                                            ToolTip="{Binding ToolTipText}"
+                                            ToolTipService.ShowDuration="20000"
+                                            ToolTipService.ShowOnDisabled="True">
+                                        <Grid Opacity="{Binding IconOpacity}">
+                                            <Image Source="{Binding Icon}"
+                                                   Width="22"
+                                                   Height="22"
+                                                   RenderOptions.BitmapScalingMode="HighQuality"
+                                                   Visibility="{Binding HasIcon, Converter={StaticResource BoolToVisibility}}" />
+                                            <Border BorderBrush="{DynamicResource BorderBrushLight}"
+                                                    BorderThickness="1"
+                                                    CornerRadius="4"
+                                                    Width="22"
+                                                    Height="22">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
+                                                        <Setter Property="Visibility" Value="Collapsed" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding HasIcon}" Value="False">
+                                                                <Setter Property="Visibility" Value="Visible" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Border.Style>
+                                                <TextBlock Text="{Binding FallbackText}"
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"
+                                                           FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource MutedTextBrush}" />
+                                            </Border>
+                                        </Grid>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </StackPanel>
 
                     <!-- Заголовок текущей группы и кнопки работы с контактами -->
@@ -293,8 +347,8 @@
                               SelectedItem="{Binding SelectedContact, Mode=TwoWay}"
                               MouseDoubleClick="ContactsGrid_MouseDoubleClick">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Имя" Binding="{Binding Name}" Width="180" />
-                            <DataGridTextColumn Header="Комментарий" Binding="{Binding Comment}" Width="200" />
+                            <DataGridTextColumn x:Name="NameColumn" Header="Имя" Binding="{Binding Name}" Width="180" />
+                            <DataGridTextColumn x:Name="CommentColumn" Header="Комментарий" Binding="{Binding Comment}" Width="200" />
                             <DataGridTextColumn x:Name="AnyDeskColumn" Header="AnyDesk" Binding="{Binding AnyDesk}" Width="110" />
                             <DataGridTextColumn x:Name="RudesktopColumn" Header="Rudesktop" Binding="{Binding Rudesktop}" Width="110" />
                             <DataGridTextColumn x:Name="AssistantColumn" Header="Ассистент" Binding="{Binding Assistant}" Width="110" />
@@ -302,7 +356,7 @@
                             <DataGridTextColumn x:Name="PasswordMaskedColumn" Header="Пароль" Binding="{Binding PasswordMasked}" Width="90" />
                             <DataGridTextColumn x:Name="PasswordPlainColumn" Header="Пароль" Binding="{Binding Password}" Width="90" Visibility="Collapsed" />
                             <DataGridTextColumn x:Name="RdpColumn" Header="RDP" Binding="{Binding Rdp}" Width="120" />
-                            <DataGridTextColumn Header="RDP Логин" Binding="{Binding RdpLogin}" Width="110" />
+                            <DataGridTextColumn x:Name="RdpLoginColumn" Header="RDP Логин" Binding="{Binding RdpLogin}" Width="110" />
                             <DataGridTextColumn x:Name="RdpPasswordMaskedColumn" Header="RDP Пароль" Binding="{Binding RdpPasswordMasked}" Width="100" />
                             <DataGridTextColumn x:Name="RdpPasswordPlainColumn" Header="RDP Пароль" Binding="{Binding RdpPassword}" Width="100" Visibility="Collapsed" />
                         </DataGrid.Columns>

@@ -9,8 +9,14 @@ namespace RemouteAddressBook.Services
     public static class ThemeService
     {
         private const string PaletteKey = "PaletteName";
-        private const string LightUri = "pack://application:,,,/Styles/Light.xaml";
-        private const string DarkUri = "pack://application:,,,/Styles/Dark.xaml";
+
+        /// <summary>
+        /// Пакетный URI с явным указанием сборки — так словарь находится независимо от того,
+        /// какая сборка стартовая.
+        /// </summary>
+        private static string PaletteUri(string name) =>
+            "pack://application:,,,/" + typeof(ThemeService).Assembly.GetName().Name +
+            ";component/Styles/" + name + ".xaml";
 
         /// <summary>Текущий режим (может быть System).</summary>
         public static AppTheme Current { get; private set; } = AppTheme.Light;
@@ -33,7 +39,7 @@ namespace RemouteAddressBook.Services
             Current = theme;
             Effective = Resolve(theme);
 
-            var source = new Uri(Effective == AppTheme.Dark ? DarkUri : LightUri, UriKind.Absolute);
+            var source = new Uri(PaletteUri(Effective == AppTheme.Dark ? "Dark" : "Light"), UriKind.Absolute);
             var palette = new ResourceDictionary { Source = source };
 
             var dictionaries = application.Resources.MergedDictionaries;

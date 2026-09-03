@@ -53,7 +53,11 @@ namespace RemouteAddressBook.ViewModels
             OpenSettingsCommand = new RelayCommand(OpenSettings);
             ImportCommand = new RelayCommand(ImportContacts);
             ConnectCommand = new RelayCommand(parameter => Connect(parameter as string, SelectedContact));
+            LaunchToolCommand = new RelayCommand(
+                parameter => LaunchTool(parameter as string),
+                parameter => CanLaunchTool(parameter as string));
 
+            RefreshToolStatuses();
             OpenDatabase(SettingsService.ResolveDatabasePath(Settings));
         }
 
@@ -64,6 +68,10 @@ namespace RemouteAddressBook.ViewModels
         public ObservableCollection<GroupItem> Groups { get; } = new ObservableCollection<GroupItem>();
 
         public ObservableCollection<LabelItem> Labels { get; } = new ObservableCollection<LabelItem>();
+
+        /// <summary>Иконки программ удалённого доступа с признаком «найдена в системе».</summary>
+        public ObservableCollection<ToolStatusItem> ToolStatuses { get; } =
+            new ObservableCollection<ToolStatusItem>();
 
         public ICollectionView ContactsView { get; }
 
@@ -96,6 +104,9 @@ namespace RemouteAddressBook.ViewModels
         public ICommand ConnectCommand { get; }
 
         public ICommand ToggleThemeCommand { get; }
+
+        /// <summary>Запуск программы по клику на её иконке.</summary>
+        public ICommand LaunchToolCommand { get; }
 
         public string Version => "1.0.0";
 
@@ -284,6 +295,80 @@ namespace RemouteAddressBook.ViewModels
             OnPropertyChanged(nameof(SelectedLabel));
 
             RefreshView();
+        }
+
+        /// <summary>
+        /// Запуск доступен, только если программа найдена на компьютере.
+        /// Проверяем по уже посчитанному состоянию панели иконок, без обращений к диску:
+        /// CanExecute вызывается часто.
+        /// </summary>
+        public bool CanLaunchTool(string toolKey)
+        {
+            if (string.IsNullOrEmpty(toolKey))
+            {
+                return false;
+            }
+
+            foreach (var status in ToolStatuses)
+            {
+                if (status.Key == toolKey)
+                {
+                    return status.IsAvailable;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>Запускает программу без подключения — по клику на иконке.</summary>
+        public void LaunchTool(string toolKey)
+        {
+            if (!CanLaunchTool(toolKey))
+            {
+                return;
+            }
+
+            var result = ConnectionService.LaunchTool(toolKey, Settings);
+            if (result.Success)
+            {
+                StatusText = result.Message;
+                return;
+            }
+
+            StatusText = string.Empty;
+            _dialogs?.Error(result.Message, "Запуск программы");
+        }
+
+        /// <summary>
+        /// Обновляет панель иконок: для каждого инструмента проверяет, найден ли его
+        /// исполняемый файл, и вытаскивает иконку.
+        /// </summary>
+        public void RefreshToolStatuses()
+        {
+            AppIconService.ClearCache();
+
+            if (ToolStatuses.Count == 0)
+            {
+                foreach (var key in ToolKeys.All)
+                {
+                    ToolStatuses.Add(new ToolStatusItem(key, ToolKeys.DisplayName(key)));
+                }
+            }
+
+            foreach (var item in ToolStatuses)
+            {
+                var tool = Settings.GetTool(item.Key);
+                var resolved = ToolDiscoveryService.ResolveExecutable(tool.ExePath);
+
+                item.IsAvailable = resolved != null;
+                item.ExePath = resolved ?? tool.ExePath;
+
+                // Если файла нет, иконку взять неоткуда — показывается бледная заглушка.
+                item.Icon = resolved == null ? null : AppIconService.GetIcon(resolved);
+            }
+
+            // Доступность кнопок запуска изменилась — пересчитать CanExecute.
+            CommandManager.InvalidateRequerySuggested();
         }
 
         /// <summary>Запускает подключение указанным инструментом.</summary>
@@ -697,9 +782,10 @@ namespace RemouteAddressBook.ViewModels
             OnPropertyChanged(nameof(ShowGroupsPanel));
             OnPropertyChanged(nameof(Theme));
 
-            // Тема могла измениться в окне настроек.
+            // Тема и пути к программам могли измениться в окне настроек.
             ThemeService.Apply(Settings.Theme);
             RaiseThemeProperties();
+            RefreshToolStatuses();
             SettingsService.Save(Settings);
 
             var newPath = SettingsService.ResolveDatabasePath(Settings);

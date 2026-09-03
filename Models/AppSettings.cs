@@ -23,6 +23,9 @@ namespace RemouteAddressBook.Models
         /// <summary>Настройки инструментов по ключу из <see cref="ToolKeys"/>.</summary>
         public Dictionary<string, ToolConfig> Tools { get; set; } = new Dictionary<string, ToolConfig>();
 
+        /// <summary>Ширина колонок таблицы по имени колонки.</summary>
+        public Dictionary<string, double> ColumnWidths { get; set; } = new Dictionary<string, double>();
+
         public double WindowLeft { get; set; } = double.NaN;
 
         public double WindowTop { get; set; } = double.NaN;

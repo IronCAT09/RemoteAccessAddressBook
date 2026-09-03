@@ -16,6 +16,7 @@ namespace RemouteAddressBook.Views
         private readonly MainViewModel _viewModel;
         private readonly AppSettings _settings;
         private Dictionary<DataGridColumn, string> _toolColumns;
+        private Dictionary<string, DataGridColumn[]> _columnGroups;
 
         public MainWindow()
         {
@@ -44,7 +45,24 @@ namespace RemouteAddressBook.Views
                 { RdpColumn, ToolKeys.Rdp },
             };
 
+            // Колонки «Пароль» и «RDP Пароль» существуют парами (маска и открытый текст),
+            // ширина у пары общая.
+            _columnGroups = new Dictionary<string, DataGridColumn[]>
+            {
+                { "Name", new DataGridColumn[] { NameColumn } },
+                { "Comment", new DataGridColumn[] { CommentColumn } },
+                { "AnyDesk", new DataGridColumn[] { AnyDeskColumn } },
+                { "Rudesktop", new DataGridColumn[] { RudesktopColumn } },
+                { "Assistant", new DataGridColumn[] { AssistantColumn } },
+                { "Ammyy", new DataGridColumn[] { AmmyyColumn } },
+                { "Password", new DataGridColumn[] { PasswordMaskedColumn, PasswordPlainColumn } },
+                { "Rdp", new DataGridColumn[] { RdpColumn } },
+                { "RdpLogin", new DataGridColumn[] { RdpLoginColumn } },
+                { "RdpPassword", new DataGridColumn[] { RdpPasswordMaskedColumn, RdpPasswordPlainColumn } },
+            };
+
             RestoreWindowPlacement();
+            RestoreColumnWidths();
             UpdatePasswordColumns();
             StateChanged += OnStateChanged;
             Closing += OnClosing;
@@ -82,8 +100,58 @@ namespace RemouteAddressBook.Views
             ApplyMaximizedMargin();
         }
 
+        /// <summary>Восстанавливает ширину колонок из настроек.</summary>
+        private void RestoreColumnWidths()
+        {
+            if (_settings.ColumnWidths == null)
+            {
+                return;
+            }
+
+            foreach (var group in _columnGroups)
+            {
+                if (!_settings.ColumnWidths.TryGetValue(group.Key, out var width) ||
+                    double.IsNaN(width) || width < 20 || width > 2000)
+                {
+                    continue;
+                }
+
+                foreach (var column in group.Value)
+                {
+                    column.Width = new DataGridLength(width);
+                }
+            }
+        }
+
+        /// <summary>Запоминает ширину колонок, которую выставил пользователь.</summary>
+        private void SaveColumnWidths()
+        {
+            _settings.ColumnWidths ??= new Dictionary<string, double>();
+            foreach (var group in _columnGroups)
+            {
+                // У пары колонок берём ширину видимой.
+                foreach (var column in group.Value)
+                {
+                    if (column.Visibility != Visibility.Visible)
+                    {
+                        continue;
+                    }
+
+                    var width = column.ActualWidth;
+                    if (width >= 20)
+                    {
+                        _settings.ColumnWidths[group.Key] = Math.Round(width);
+                    }
+
+                    break;
+                }
+            }
+        }
+
         private void OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            SaveColumnWidths();
+
             _settings.WindowMaximized = WindowState == WindowState.Maximized;
             if (WindowState == WindowState.Normal)
             {

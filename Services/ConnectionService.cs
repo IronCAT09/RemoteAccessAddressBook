@@ -116,6 +116,51 @@ namespace RemouteAddressBook.Services
         }
 
         /// <summary>
+        /// Просто запускает программу без ID и аргументов — по клику на её иконке.
+        /// </summary>
+        public static ConnectionResult LaunchTool(string toolKey, AppSettings settings)
+        {
+            if (settings == null || string.IsNullOrEmpty(toolKey))
+            {
+                return ConnectionResult.Fail("Нет данных для запуска.");
+            }
+
+            var toolName = ToolKeys.DisplayName(toolKey);
+            var tool = settings.GetTool(toolKey);
+            var exePath = ToolDiscoveryService.ResolveExecutable(tool.ExePath);
+
+            if (exePath == null)
+            {
+                return ConnectionResult.Fail(
+                    "«" + toolName + "» не найден на компьютере.\n" +
+                    (string.IsNullOrWhiteSpace(tool.ExePath)
+                        ? "Путь не задан."
+                        : "Указанный путь: " + tool.ExePath) + "\n\n" +
+                    "Откройте Настройки и укажите путь или нажмите «Найти установленные».");
+            }
+
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = exePath,
+                    UseShellExecute = true,
+                });
+            }
+            catch (Win32Exception ex)
+            {
+                return ConnectionResult.Fail(
+                    "Запустить «" + toolName + "» не удалось: " + exePath + "\n" + ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return ConnectionResult.Fail("Запустить «" + toolName + "» не удалось: " + ex.Message);
+            }
+
+            return ConnectionResult.Ok("«" + toolName + "» запущен.");
+        }
+
+        /// <summary>
         /// Копирует ID в буфер обмена и запускает программу без передачи ID в аргументах.
         /// Используется там, где командная строка подключение не выполняет.
         /// </summary>
