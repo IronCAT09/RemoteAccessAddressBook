@@ -13,6 +13,7 @@
         FontFamily="Segoe UI"
         FontSize="13"
         Foreground="{DynamicResource TextBrush}"
+        Icon="/Assets/app.ico"
         WindowStyle="None"
         AllowsTransparency="False">
 
@@ -49,7 +50,10 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="10,0,0,0" VerticalAlignment="Center">
-                    <Ellipse Width="14" Height="14" Fill="{DynamicResource DangerBrush}" />
+                    <Image Source="/Assets/app.png"
+                           Width="22"
+                           Height="22"
+                           RenderOptions.BitmapScalingMode="HighQuality" />
                     <TextBlock Text="Remoute — Address Book"
                                Margin="8,0,0,0"
                                VerticalAlignment="Center"
@@ -69,6 +73,10 @@
                             Command="{Binding ImportCommand}"
                             Content="&#xE8B5;"
                             ToolTip="Импорт контактов из CSV/XLSX" />
+                    <Button Style="{StaticResource IconButtonStyle}"
+                            Command="{Binding AboutCommand}"
+                            Content="&#xE946;"
+                            ToolTip="О приложении" />
                     <TextBlock Text="{Binding Version}"
                                Margin="10,0,10,0"
                                VerticalAlignment="Center"
@@ -345,7 +353,32 @@
                               ColumnHeaderStyle="{StaticResource ContactsGridHeaderStyle}"
                               ItemsSource="{Binding ContactsView}"
                               SelectedItem="{Binding SelectedContact, Mode=TwoWay}"
-                              MouseDoubleClick="ContactsGrid_MouseDoubleClick">
+                              MouseDoubleClick="ContactsGrid_MouseDoubleClick"
+                              PreviewMouseRightButtonDown="ContactsGrid_PreviewMouseRightButtonDown"
+                              ContextMenuOpening="ContactsGrid_ContextMenuOpening">
+                        <DataGrid.ContextMenu>
+                            <ContextMenu>
+                                <!-- Пункты подменю (по программам) строятся при открытии меню -->
+                                <MenuItem x:Name="ConnectMenuItem" Header="Подключиться">
+                                    <MenuItem.Icon>
+                                        <TextBlock Style="{StaticResource MenuGlyphStyle}" Text="&#xE703;" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Изменить" Command="{Binding EditContactCommand}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Style="{StaticResource MenuGlyphStyle}" Text="&#xE70F;" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <Separator />
+                                <MenuItem Header="Удалить" Command="{Binding DeleteContactCommand}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Style="{StaticResource MenuGlyphStyle}"
+                                                   Text="&#xE74D;"
+                                                   Foreground="{DynamicResource DangerBrush}" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
                         <DataGrid.Columns>
                             <DataGridTextColumn x:Name="NameColumn" Header="Имя" Binding="{Binding Name}" Width="180" />
                             <DataGridTextColumn x:Name="CommentColumn" Header="Комментарий" Binding="{Binding Comment}" Width="200" />

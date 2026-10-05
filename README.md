@@ -67,6 +67,11 @@ dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=
   подключение; по остальным колонкам — открывает окно редактирования контакта.
   Для Ассистента и RuDesktop двойной клик копирует ID в буфер обмена и запускает
   программу (см. «Настройка команд подключения»).
+- **Контекстное меню строки** (правый клик или клавиша меню): «Подключиться» —
+  подменю со всеми программами, активны только те, для которых у контакта задан ID;
+  программа колонки, по которой кликнули, выделена жирным. Далее «Изменить» и «Удалить».
+- **О приложении** — кнопка «i» в шапке окна: версия, пути к базе и `settings.json`
+  (с кнопкой «Открыть папку»), версия .NET и Windows.
 - Размер и положение окна, выбранная группа и состояние переключателей панелей
   сохраняются между запусками.
 
@@ -166,8 +171,9 @@ Services/    SettingsService, ConnectionService, ImportService, ThemeService,
              ToolDiscoveryService, AppIconService, IDialogService
 ViewModels/  MainViewModel, RelayCommand, ToolSettingRow, ImportMappingRow,
              ToolStatusItem
-Views/       MainWindow, ContactEditWindow, SettingsWindow, ImportWindow,
+Views/       MainWindow, ContactEditWindow, SettingsWindow, ImportWindow, AboutWindow,
              TextPromptWindow, DialogService
+Assets/      app.ico (иконка exe и окон), app.png (заголовок, «О приложении»)
 Styles/      Light.xaml / Dark.xaml — палитры (подменяются на лету),
              Theme.xaml — стили контролов (обращаются к палитре через DynamicResource)
 ```

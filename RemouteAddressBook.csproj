@@ -9,8 +9,8 @@
     <LangVersion>latest</LangVersion>
     <AssemblyName>RemouteAddressBook</AssemblyName>
     <RootNamespace>RemouteAddressBook</RootNamespace>
-    <ApplicationIcon></ApplicationIcon>
-    <Version>1.0.1</Version>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <Version>1.0.2</Version>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <InvariantGlobalization>false</InvariantGlobalization>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
@@ -21,6 +21,12 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.8" />
     <PackageReference Include="ClosedXML" Version="0.102.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Иконка: app.ico — для exe и окон, app.png — для заголовка и окна «О приложении» -->
+    <Resource Include="Assets\app.ico" />
+    <Resource Include="Assets\app.png" />
   </ItemGroup>
 
 </Project>

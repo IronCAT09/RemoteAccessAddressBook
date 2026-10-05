@@ -41,6 +41,12 @@ namespace RemouteAddressBook.Views
             return window.Imported;
         }
 
+        public void ShowAbout(string version, string databasePath)
+        {
+            var window = new AboutWindow(version, databasePath) { Owner = _owner };
+            window.ShowDialog();
+        }
+
         public bool Confirm(string message, string title)
         {
             return Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes;

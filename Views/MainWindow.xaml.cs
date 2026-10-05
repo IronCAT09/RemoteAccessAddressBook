@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -17,6 +18,7 @@ namespace RemouteAddressBook.Views
         private readonly AppSettings _settings;
         private Dictionary<DataGridColumn, string> _toolColumns;
         private Dictionary<string, DataGridColumn[]> _columnGroups;
+        private DataGridColumn _contextMenuColumn;
 
         public MainWindow()
         {
@@ -251,6 +253,79 @@ namespace RemouteAddressBook.Views
                 _viewModel.EditContactCommand.Execute(null);
                 e.Handled = true;
             }
+        }
+
+        /// <summary>
+        /// Правый клик выделяет строку под курсором (DataGrid сам этого не делает)
+        /// и запоминает колонку — от неё зависит, какая программа в меню будет основной.
+        /// </summary>
+        private void ContactsGrid_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            _contextMenuColumn = null;
+
+            var cell = FindParent<DataGridCell>(e.OriginalSource as DependencyObject);
+            if (cell?.DataContext is not Contact contact)
+            {
+                return;
+            }
+
+            _contextMenuColumn = cell.Column;
+            _viewModel.SelectedContact = contact;
+            cell.Focus();
+        }
+
+        /// <summary>Заполняет подменю «Подключиться» программами, для которых у контакта задан ID.</summary>
+        private void ContactsGrid_ContextMenuOpening(object sender, ContextMenuEventArgs e)
+        {
+            var contact = _viewModel.SelectedContact;
+            var cell = FindParent<DataGridCell>(e.OriginalSource as DependencyObject);
+            var fromKeyboard = e.CursorLeft < 0 && e.CursorTop < 0;
+            if (contact == null || (cell == null && !fromKeyboard))
+            {
+                // Клик мимо строк (пустое место, заголовок) — меню не показываем.
+                e.Handled = true;
+                return;
+            }
+
+            string preferredKey = null;
+            if (_contextMenuColumn != null)
+            {
+                _toolColumns.TryGetValue(_contextMenuColumn, out preferredKey);
+            }
+
+            ConnectMenuItem.Items.Clear();
+            foreach (var key in ToolKeys.All)
+            {
+                var id = contact.GetToolId(key);
+                var hasId = !string.IsNullOrWhiteSpace(id);
+                var item = new MenuItem
+                {
+                    Header = hasId ? ToolKeys.DisplayName(key) + "  —  " + id.Trim() : ToolKeys.DisplayName(key),
+                    IsEnabled = hasId,
+                    Icon = CreateToolIcon(key),
+                    FontWeight = key == preferredKey && hasId ? FontWeights.SemiBold : FontWeights.Normal,
+                };
+
+                var toolKey = key;
+                item.Click += (_, _) => _viewModel.Connect(toolKey, contact);
+                ConnectMenuItem.Items.Add(item);
+            }
+
+            ConnectMenuItem.IsEnabled = ToolKeys.All.Any(key => !string.IsNullOrWhiteSpace(contact.GetToolId(key)));
+        }
+
+        /// <summary>Иконка программы из панели над таблицей (если её удалось извлечь из exe).</summary>
+        private Image CreateToolIcon(string toolKey)
+        {
+            var status = _viewModel.ToolStatuses.FirstOrDefault(s => s.Key == toolKey);
+            if (status?.Icon == null)
+            {
+                return null;
+            }
+
+            var image = new Image { Source = status.Icon, Width = 16, Height = 16 };
+            RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.HighQuality);
+            return image;
         }
 
         private static T FindParent<T>(DependencyObject element)

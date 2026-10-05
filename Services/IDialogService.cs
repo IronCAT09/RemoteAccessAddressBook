@@ -19,6 +19,9 @@ namespace RemouteAddressBook.Services
         /// <summary>Окно импорта. Возвращает true, если данные были импортированы.</summary>
         bool ImportContacts(Database database, IList<Contact> existingContacts, IEnumerable<GroupItem> groups);
 
+        /// <summary>Окно «О приложении».</summary>
+        void ShowAbout(string version, string databasePath);
+
         bool Confirm(string message, string title);
 
         void Info(string message, string title);

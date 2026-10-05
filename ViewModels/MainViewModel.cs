@@ -52,6 +52,7 @@ namespace RemouteAddressBook.ViewModels
             ToggleThemeCommand = new RelayCommand(ToggleTheme);
             OpenSettingsCommand = new RelayCommand(OpenSettings);
             ImportCommand = new RelayCommand(ImportContacts);
+            AboutCommand = new RelayCommand(() => _dialogs?.ShowAbout(Version, SettingsService.ResolveDatabasePath(Settings)));
             ConnectCommand = new RelayCommand(parameter => Connect(parameter as string, SelectedContact));
             LaunchToolCommand = new RelayCommand(
                 parameter => LaunchTool(parameter as string),
@@ -100,6 +101,8 @@ namespace RemouteAddressBook.ViewModels
         public ICommand OpenSettingsCommand { get; }
 
         public ICommand ImportCommand { get; }
+
+        public ICommand AboutCommand { get; }
 
         public ICommand ConnectCommand { get; }
 
