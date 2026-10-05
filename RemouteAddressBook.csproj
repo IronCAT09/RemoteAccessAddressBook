@@ -10,7 +10,7 @@
     <AssemblyName>RemouteAddressBook</AssemblyName>
     <RootNamespace>RemouteAddressBook</RootNamespace>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <InvariantGlobalization>false</InvariantGlobalization>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
