@@ -10,7 +10,7 @@
     <AssemblyName>RemoteAccessAddressBook</AssemblyName>
     <RootNamespace>RemoteAccessAddressBook</RootNamespace>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
-    <Version>1.0.4</Version>
+    <Version>1.1.0</Version>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <InvariantGlobalization>false</InvariantGlobalization>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
@@ -21,6 +21,16 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.8" />
     <PackageReference Include="ClosedXML" Version="0.102.3" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Сервер — отдельный проект в подкаталоге, в клиент он не входит -->
+    <Compile Remove="Server\**" />
+    <None Remove="Server\**" />
+    <Content Remove="Server\**" />
+    <Page Remove="Server\**" />
+    <EmbeddedResource Remove="Server\**" />
   </ItemGroup>
 
   <ItemGroup>

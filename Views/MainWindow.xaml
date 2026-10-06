@@ -28,7 +28,20 @@
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
         <conv:NullToVisibilityConverter x:Key="NullToVisibility" />
+
+        <!-- Пункт меню, который скрывается, когда команда недоступна -->
+        <Style x:Key="HideWhenDisabledMenuItem" TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
+
+    <Window.InputBindings>
+        <KeyBinding Key="F5" Command="{Binding RefreshCommand}" />
+    </Window.InputBindings>
 
     <Border x:Name="RootBorder"
             BorderBrush="{DynamicResource AccentBrush}"
@@ -61,6 +74,53 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Облачная база: состояние и меню (подключение, синхронизация, шифрование) -->
+                    <TextBlock Text="{Binding CloudStatusText}"
+                               Margin="0,0,2,0"
+                               VerticalAlignment="Center"
+                               Foreground="{DynamicResource MutedTextBrush}"
+                               ToolTip="{Binding CloudToolTip}" />
+                    <Button x:Name="CloudButton"
+                            Style="{StaticResource IconButtonStyle}"
+                            Content="&#xE753;"
+                            ToolTip="{Binding CloudToolTip}"
+                            Click="CloudButton_Click">
+                        <Button.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="{Binding CloudConnectHeader}" Command="{Binding CloudConnectCommand}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Style="{StaticResource MenuGlyphStyle}" Text="&#xE77B;" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Отключиться от облачной базы" Command="{Binding CloudDisconnectCommand}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Style="{StaticResource MenuGlyphStyle}" Text="&#xF3B1;" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <Separator />
+                                <MenuItem Header="Скопировать облако → локальная база…" Command="{Binding SyncCloudToLocalCommand}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Style="{StaticResource MenuGlyphStyle}" Text="&#xE896;" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Скопировать локальная база → облако…" Command="{Binding SyncLocalToCloudCommand}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Style="{StaticResource MenuGlyphStyle}" Text="&#xE898;" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <Separator />
+                                <MenuItem Header="{Binding LocalEncryptionHeader}" Command="{Binding LocalEncryptionCommand}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Style="{StaticResource MenuGlyphStyle}" Text="&#xE72E;" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                    </Button>
+                    <Button Style="{StaticResource IconButtonStyle}"
+                            Command="{Binding RefreshCommand}"
+                            Content="&#xE72C;"
+                            ToolTip="Обновить данные из базы (F5)" />
                     <Button Style="{StaticResource IconButtonStyle}"
                             Command="{Binding ToggleThemeCommand}"
                             Content="{Binding ThemeGlyph}"
@@ -369,6 +429,28 @@
                                         <TextBlock Style="{StaticResource MenuGlyphStyle}" Text="&#xE70F;" />
                                     </MenuItem.Icon>
                                 </MenuItem>
+                                <!-- Пункты для облака показываются, только когда применимы -->
+                                <MenuItem Header="Разобрать расхождение…"
+                                          Command="{Binding ResolveConflictCommand}"
+                                          Style="{StaticResource HideWhenDisabledMenuItem}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Style="{StaticResource MenuGlyphStyle}" Text="&#xE7BA;" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Скопировать в облачную базу"
+                                          Command="{Binding CopyToCloudCommand}"
+                                          Style="{StaticResource HideWhenDisabledMenuItem}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Style="{StaticResource MenuGlyphStyle}" Text="&#xE898;" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                                <MenuItem Header="Скопировать в локальную базу"
+                                          Command="{Binding CopyToLocalCommand}"
+                                          Style="{StaticResource HideWhenDisabledMenuItem}">
+                                    <MenuItem.Icon>
+                                        <TextBlock Style="{StaticResource MenuGlyphStyle}" Text="&#xE896;" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
                                 <Separator />
                                 <MenuItem Header="Удалить" Command="{Binding DeleteContactCommand}">
                                     <MenuItem.Icon>
@@ -380,6 +462,32 @@
                             </ContextMenu>
                         </DataGrid.ContextMenu>
                         <DataGrid.Columns>
+                            <!-- Где хранится контакт: облако, локальная база или расхождение между ними -->
+                            <DataGridTemplateColumn x:Name="SourceColumn" Header="" Width="30" CanUserResize="False">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding SourceGlyph}"
+                                                   ToolTip="{Binding SourceToolTip}"
+                                                   FontFamily="Segoe MDL2 Assets"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="{DynamicResource MutedTextBrush}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsCloud}" Value="True">
+                                                            <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding HasConflict}" Value="True">
+                                                            <Setter Property="Foreground" Value="{DynamicResource DangerBrush}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                             <DataGridTextColumn x:Name="NameColumn" Header="Имя" Binding="{Binding Name}" Width="180" />
                             <DataGridTextColumn x:Name="CommentColumn" Header="Комментарий" Binding="{Binding Comment}" Width="200" />
                             <DataGridTextColumn x:Name="AnyDeskColumn" Header="AnyDesk" Binding="{Binding AnyDesk}" Width="110" />

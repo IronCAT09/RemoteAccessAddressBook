@@ -309,6 +309,19 @@
     <!-- Все поля ввода без явного стиля выглядят так же -->
     <Style TargetType="TextBox" BasedOn="{StaticResource InputTextBoxStyle}" />
 
+    <!-- Поля паролей и парольных фраз -->
+    <Style TargetType="PasswordBox">
+        <Setter Property="Padding" Value="6,4" />
+        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource TextBrush}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource AccentBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrushLight}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="MinHeight" Value="26" />
+    </Style>
+
     <Style TargetType="TextBlock" x:Key="FieldLabelStyle">
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
         <Setter Property="VerticalAlignment" Value="Center" />

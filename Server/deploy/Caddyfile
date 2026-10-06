@@ -1,0 +1,5 @@
+# Caddy получает сертификат Let's Encrypt сам и продлевает его.
+# Замените addr.example.com на свой домен (его A-запись должна указывать на VPS).
+addr.example.com {
+	reverse_proxy 127.0.0.1:5080
+}

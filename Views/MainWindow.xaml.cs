@@ -51,6 +51,7 @@ namespace RemoteAccessAddressBook.Views
             // ширина у пары общая.
             _columnGroups = new Dictionary<string, DataGridColumn[]>
             {
+                { "Source", new DataGridColumn[] { SourceColumn } },
                 { "Name", new DataGridColumn[] { NameColumn } },
                 { "Comment", new DataGridColumn[] { CommentColumn } },
                 { "AnyDesk", new DataGridColumn[] { AnyDeskColumn } },
@@ -65,7 +66,9 @@ namespace RemoteAccessAddressBook.Views
 
             RestoreWindowPlacement();
             RestoreColumnWidths();
+            RestoreColumnOrder();
             UpdatePasswordColumns();
+            ContactsGrid.ColumnReordered += OnColumnReordered;
             StateChanged += OnStateChanged;
             Closing += OnClosing;
         }
@@ -150,9 +153,62 @@ namespace RemoteAccessAddressBook.Views
             }
         }
 
+        /// <summary>Восстанавливает порядок колонок из настроек.</summary>
+        private void RestoreColumnOrder()
+        {
+            if (_settings.ColumnOrder == null || _settings.ColumnOrder.Count == 0)
+            {
+                return;
+            }
+
+            // Колонки в сохранённом порядке; тех, которых в нём нет (например, появились
+            // в новой версии), вставляем на их место по умолчанию.
+            var order = _settings.ColumnOrder.Where(_columnGroups.ContainsKey).Distinct().ToList();
+            var defaults = _columnGroups.Keys.ToList();
+            foreach (var key in defaults.Where(key => !order.Contains(key)).ToList())
+            {
+                order.Insert(Math.Min(defaults.IndexOf(key), order.Count), key);
+            }
+
+            ApplyColumnOrder(order);
+        }
+
+        /// <summary>Текущий порядок колонок слева направо (пара «маска/открытый текст» — одна колонка).</summary>
+        private List<string> CurrentColumnOrder()
+        {
+            // У пары берём положение видимой колонки: её и двигал пользователь.
+            return _columnGroups
+                .OrderBy(group => (group.Value.FirstOrDefault(c => c.Visibility == Visibility.Visible) ?? group.Value[0]).DisplayIndex)
+                .Select(group => group.Key)
+                .ToList();
+        }
+
+        /// <summary>Расставляет колонки по порядку; колонки пары всегда стоят рядом.</summary>
+        private void ApplyColumnOrder(IEnumerable<string> order)
+        {
+            var index = 0;
+            foreach (var key in order)
+            {
+                foreach (var column in _columnGroups[key])
+                {
+                    column.DisplayIndex = index++;
+                }
+            }
+        }
+
+        /// <summary>
+        /// После перетаскивания колонки подтягиваем к ней скрытую половину пары, иначе
+        /// «Показать пароли» вывел бы колонку пароля на старом месте.
+        /// </summary>
+        private void OnColumnReordered(object sender, DataGridColumnEventArgs e)
+        {
+            Dispatcher.BeginInvoke(new Action(() => ApplyColumnOrder(CurrentColumnOrder())));
+        }
+
         private void OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             SaveColumnWidths();
+            _settings.ColumnOrder = CurrentColumnOrder();
 
             _settings.WindowMaximized = WindowState == WindowState.Maximized;
             if (WindowState == WindowState.Normal)
@@ -200,6 +256,16 @@ namespace RemoteAccessAddressBook.Views
             {
                 DragMove();
             }
+        }
+
+        /// <summary>Кнопка облака открывает своё меню по обычному клику.</summary>
+        private void CloudButton_Click(object sender, RoutedEventArgs e)
+        {
+            var menu = CloudButton.ContextMenu;
+            menu.PlacementTarget = CloudButton;
+            menu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            menu.DataContext = DataContext;
+            menu.IsOpen = true;
         }
 
         private void MinimizeButton_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;

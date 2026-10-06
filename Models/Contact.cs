@@ -4,9 +4,21 @@ using System.Runtime.CompilerServices;
 
 namespace RemoteAccessAddressBook.Models
 {
+    /// <summary>Откуда контакт: локальная/сетевая база или облачная (сервер).</summary>
+    public enum ContactSource
+    {
+        Local,
+        Cloud,
+    }
+
     /// <summary>Контакт адресной книги.</summary>
     public class Contact : INotifyPropertyChanged
     {
+        private ContactSource _source;
+        private string _cloudId = string.Empty;
+        private long _version;
+        private string _groupName = string.Empty;
+        private bool _hasConflict;
         private long _id;
         private string _name = string.Empty;
         private string _comment = string.Empty;
@@ -20,10 +32,95 @@ namespace RemoteAccessAddressBook.Models
         private string _rdpPassword = string.Empty;
         private long? _groupId;
 
+        public ContactSource Source
+        {
+            get => _source;
+            set
+            {
+                if (Set(ref _source, value))
+                {
+                    OnPropertyChanged(nameof(IsCloud));
+                    OnPropertyChanged(nameof(Key));
+                    OnPropertyChanged(nameof(SourceGlyph));
+                    OnPropertyChanged(nameof(SourceToolTip));
+                }
+            }
+        }
+
+        public bool IsCloud => _source == ContactSource.Cloud;
+
+        /// <summary>Id записи на сервере (GUID) для облачных контактов.</summary>
+        public string CloudId
+        {
+            get => _cloudId;
+            set
+            {
+                if (Set(ref _cloudId, value ?? string.Empty))
+                {
+                    OnPropertyChanged(nameof(Key));
+                }
+            }
+        }
+
+        /// <summary>Id строки в локальной базе (для локальных контактов).</summary>
         public long Id
         {
             get => _id;
-            set => Set(ref _id, value);
+            set
+            {
+                if (Set(ref _id, value))
+                {
+                    OnPropertyChanged(nameof(Key));
+                }
+            }
+        }
+
+        /// <summary>Уникальный ключ контакта среди обеих баз.</summary>
+        public string Key => IsCloud ? "C:" + _cloudId : "L:" + _id;
+
+        /// <summary>Версия записи: для проверки, не изменил ли её кто-то ещё, пока она была открыта.</summary>
+        public long Version
+        {
+            get => _version;
+            set => Set(ref _version, value);
+        }
+
+        /// <summary>Имя группы. Группы обеих баз сопоставляются по имени (без учёта регистра).</summary>
+        public string GroupName
+        {
+            get => _groupName;
+            set => Set(ref _groupName, value ?? string.Empty);
+        }
+
+        /// <summary>Имена меток. Метки обеих баз сопоставляются по имени.</summary>
+        public HashSet<string> LabelNames { get; } = new HashSet<string>(System.StringComparer.CurrentCultureIgnoreCase);
+
+        /// <summary>Есть такой же контакт в другой базе, но с другими данными.</summary>
+        public bool HasConflict
+        {
+            get => _hasConflict;
+            set
+            {
+                if (Set(ref _hasConflict, value))
+                {
+                    OnPropertyChanged(nameof(SourceGlyph));
+                    OnPropertyChanged(nameof(SourceToolTip));
+                }
+            }
+        }
+
+        /// <summary>Значок в колонке «Где»: облако, локальная база или предупреждение о расхождении.</summary>
+        public string SourceGlyph => HasConflict ? "" : IsCloud ? "" : "";
+
+        public string SourceToolTip
+        {
+            get
+            {
+                var where = IsCloud ? "Облачная база" : "Локальная база";
+                return HasConflict
+                    ? where + "\nВ другой базе есть этот же контакт с другими данными — разберите расхождение синхронизацией."
+                    : where;
+            }
         }
 
         public string Name
@@ -116,30 +213,22 @@ namespace RemoteAccessAddressBook.Models
         {
             var copy = new Contact
             {
+                Source = Source,
+                CloudId = CloudId,
                 Id = Id,
-                Name = Name,
-                Comment = Comment,
-                AnyDesk = AnyDesk,
-                Rudesktop = Rudesktop,
-                Assistant = Assistant,
-                Ammyy = Ammyy,
-                Rdp = Rdp,
-                Password = Password,
-                RdpLogin = RdpLogin,
-                RdpPassword = RdpPassword,
-                GroupId = GroupId,
+                Version = Version,
             };
-            foreach (var id in LabelIds)
-            {
-                copy.LabelIds.Add(id);
-            }
-
+            copy.CopyValuesFrom(this);
             return copy;
         }
 
-        /// <summary>Копирует все поля (кроме Id) из другого контакта.</summary>
+        /// <summary>Копирует данные контакта (без идентичности: источника, Id, CloudId).</summary>
         public void CopyValuesFrom(Contact other)
         {
+            Version = other.Version;
+            GroupName = other.GroupName;
+            LabelNames.Clear();
+            LabelNames.UnionWith(other.LabelNames);
             Name = other.Name;
             Comment = other.Comment;
             AnyDesk = other.AnyDesk;

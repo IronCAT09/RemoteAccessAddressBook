@@ -16,9 +16,9 @@ namespace RemoteAccessAddressBook.Views
             _owner = owner;
         }
 
-        public bool EditContact(Contact contact, IEnumerable<GroupItem> groups, IEnumerable<LabelItem> labels, string title)
+        public bool EditContact(Contact contact, IEnumerable<string> groups, IEnumerable<string> labels, string title, ContactEditOptions options)
         {
-            var window = new ContactEditWindow(contact, groups, labels, title) { Owner = _owner };
+            var window = new ContactEditWindow(contact, groups, labels, title, options) { Owner = _owner };
             return window.ShowDialog() == true;
         }
 
@@ -27,6 +27,28 @@ namespace RemoteAccessAddressBook.Views
             var window = new TextPromptWindow(title, caption, initialValue) { Owner = _owner };
             return window.ShowDialog() == true ? window.Value : null;
         }
+
+        public string PromptPassphrase(string title, string message, bool confirm)
+        {
+            var window = new PassphraseWindow(title, message, confirm) { Owner = OwnerIfShown() };
+            return window.ShowDialog() == true ? window.Passphrase : null;
+        }
+
+        public CloudLoginOutcome LoginToCloud(string serverUrl, string login)
+        {
+            var window = new CloudLoginWindow(serverUrl, login) { Owner = _owner };
+            return window.ShowDialog() == true ? window.Outcome : null;
+        }
+
+        public ConflictDecision ResolveConflict(ConflictRequest request)
+        {
+            var window = new ConflictWindow(request) { Owner = _owner };
+            window.ShowDialog();
+            return window.Decision;
+        }
+
+        /// <summary>Фразу локальной базы спрашивают ещё до показа главного окна — тогда без владельца.</summary>
+        private Window OwnerIfShown() => _owner != null && _owner.IsLoaded ? _owner : null;
 
         public bool EditSettings(AppSettings settings)
         {

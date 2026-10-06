@@ -92,16 +92,39 @@
             </ListBox>
         </GroupBox>
 
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
-            <Button Content="Сохранить"
-                    Style="{StaticResource FlatButtonStyle}"
-                    IsDefault="True"
-                    Click="Save_Click"
-                    Margin="0,0,8,0" />
-            <Button Content="Отмена"
-                    Style="{StaticResource SecondaryButtonStyle}"
-                    IsCancel="True"
-                    Click="Cancel_Click" />
-        </StackPanel>
+        <Grid Grid.Row="2" Margin="0,14,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Новый контакт: куда сохранить. Существующий: где он хранится. -->
+            <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                <CheckBox x:Name="SaveToCloudCheckBox"
+                          Content="Сохранить в облачную базу"
+                          Visibility="Collapsed" />
+                <TextBlock x:Name="CloudNoteText"
+                           Margin="20,2,0,0"
+                           FontSize="12"
+                           TextWrapping="Wrap"
+                           Foreground="{DynamicResource MutedTextBrush}"
+                           Visibility="Collapsed" />
+                <TextBlock x:Name="SourceText"
+                           Foreground="{DynamicResource MutedTextBrush}"
+                           Visibility="Collapsed" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Content="Сохранить"
+                        Style="{StaticResource FlatButtonStyle}"
+                        IsDefault="True"
+                        Click="Save_Click"
+                        Margin="0,0,8,0" />
+                <Button Content="Отмена"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        IsCancel="True"
+                        Click="Cancel_Click" />
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

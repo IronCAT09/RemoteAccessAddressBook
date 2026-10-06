@@ -4,9 +4,40 @@ using System.Text.Json.Serialization;
 
 namespace RemoteAccessAddressBook.Models
 {
+    /// <summary>Подключение к облачной базе. Токен и ключ защищены DPAPI текущего пользователя.</summary>
+    public class CloudSettings
+    {
+        /// <summary>Адрес сервера, например https://addr.example.com. Пусто — облако не используется.</summary>
+        public string ServerUrl { get; set; } = string.Empty;
+
+        public string Login { get; set; } = string.Empty;
+
+        public bool IsAdmin { get; set; }
+
+        /// <summary>Токен доступа (DPAPI, base64).</summary>
+        public string ProtectedToken { get; set; } = string.Empty;
+
+        /// <summary>Ключ шифрования из парольной фразы (DPAPI, base64).</summary>
+        public string ProtectedKey { get; set; } = string.Empty;
+
+        /// <summary>Галочка «Сохранить в облачную базу» в окне нового контакта по умолчанию.</summary>
+        public bool AddToCloudByDefault { get; set; } = true;
+
+        [JsonIgnore]
+        public bool IsConfigured => !string.IsNullOrWhiteSpace(ServerUrl);
+    }
+
     /// <summary>Настройки приложения (файл settings.json рядом с exe).</summary>
     public class AppSettings
     {
+        public CloudSettings Cloud { get; set; } = new CloudSettings();
+
+        /// <summary>
+        /// Ключи зашифрованных локальных баз (DPAPI, base64) по полному пути к файлу базы,
+        /// чтобы не спрашивать парольную фразу при каждом запуске.
+        /// </summary>
+        public Dictionary<string, string> LocalKeys { get; set; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
         /// <summary>Путь к файлу базы данных. Пустая строка — addressbook.db рядом с exe.</summary>
         public string DatabasePath { get; set; } = string.Empty;
 
@@ -26,6 +57,9 @@ namespace RemoteAccessAddressBook.Models
         /// <summary>Ширина колонок таблицы по имени колонки.</summary>
         public Dictionary<string, double> ColumnWidths { get; set; } = new Dictionary<string, double>();
 
+        /// <summary>Порядок колонок таблицы (имена колонок слева направо), если пользователь его менял.</summary>
+        public List<string> ColumnOrder { get; set; } = new List<string>();
+
         public double WindowLeft { get; set; } = double.NaN;
 
         public double WindowTop { get; set; } = double.NaN;
@@ -38,6 +72,9 @@ namespace RemoteAccessAddressBook.Models
 
         /// <summary>Последняя выбранная группа: -1 = «Все», -2 = «Без группы», иначе id группы.</summary>
         public long SelectedGroupId { get; set; } = -1;
+
+        /// <summary>Имя выбранной группы (группы облачной и локальной баз сопоставляются по имени).</summary>
+        public string SelectedGroupName { get; set; } = string.Empty;
 
         /// <summary>Создаёт настройки со значениями по умолчанию.</summary>
         public static AppSettings CreateDefault()

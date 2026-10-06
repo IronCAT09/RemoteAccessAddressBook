@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using RemoteAccessAddressBook.Models;
 
 namespace RemoteAccessAddressBook.Services
@@ -11,6 +12,10 @@ namespace RemoteAccessAddressBook.Services
         private static readonly JsonSerializerOptions Options = new JsonSerializerOptions
         {
             WriteIndented = true,
+
+            // WindowLeft/WindowTop до первого закрытия окна равны NaN: без этого флага
+            // сериализация падала и настройки первой сессии не сохранялись.
+            NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,
         };
 
         /// <summary>Каталог, в котором лежит исполняемый файл приложения.</summary>

@@ -1,0 +1,27 @@
+# Служба systemd для сервера облачной базы Remote Access — Address Book.
+# Установка: см. Server/README.md, раздел «Ubuntu».
+[Unit]
+Description=Remote Access - Address Book server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+User=raab
+Group=raab
+WorkingDirectory=/opt/raab
+ExecStart=/opt/raab/raab-server
+Environment=RAAB_DataDirectory=/var/lib/raab
+Environment=RAAB_Urls=http://127.0.0.1:5080
+Restart=always
+RestartSec=5
+
+# Ограничения: служба может писать только в каталог данных.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/raab
+
+[Install]
+WantedBy=multi-user.target
