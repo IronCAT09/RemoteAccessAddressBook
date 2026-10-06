@@ -211,24 +211,7 @@ namespace RemoteAccessAddressBook.Services
                     "буфер занят другим приложением. ID: " + id);
         }
 
-        /// <summary>Буфер обмена может быть временно занят другим процессом — пробуем несколько раз.</summary>
-        private static bool TryCopyToClipboard(string text)
-        {
-            for (var attempt = 0; attempt < 5; attempt++)
-            {
-                try
-                {
-                    System.Windows.Clipboard.SetDataObject(text, true);
-                    return true;
-                }
-                catch (Exception)
-                {
-                    System.Threading.Thread.Sleep(80);
-                }
-            }
-
-            return false;
-        }
+        private static bool TryCopyToClipboard(string text) => ClipboardText.TrySet(text);
 
         /// <summary>Подставляет значения вместо плейсхолдеров {id}, {password}, {login}.</summary>
         public static string BuildArguments(string template, string id, string password, string login)
