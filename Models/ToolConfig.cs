@@ -1,4 +1,4 @@
-namespace RemouteAddressBook.Models
+namespace RemoteAccessAddressBook.Models
 {
     /// <summary>Настройки запуска одного инструмента удалённого доступа.</summary>
     public class ToolConfig

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using RemouteAddressBook.Services;
+using RemoteAccessAddressBook.Services;
 
-namespace RemouteAddressBook.ViewModels
+namespace RemoteAccessAddressBook.ViewModels
 {
     /// <summary>Вариант выбора колонки файла при импорте.</summary>
     public class ColumnChoice

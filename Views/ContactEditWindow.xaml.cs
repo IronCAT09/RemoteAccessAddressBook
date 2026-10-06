@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using RemouteAddressBook.Models;
+using RemoteAccessAddressBook.Models;
 
-namespace RemouteAddressBook.Views
+namespace RemoteAccessAddressBook.Views
 {
     /// <summary>Модальное окно редактирования контакта.</summary>
     public partial class ContactEditWindow : Window

@@ -1,4 +1,4 @@
-namespace RemouteAddressBook.Models
+namespace RemoteAccessAddressBook.Models
 {
     /// <summary>Оформление интерфейса.</summary>
     public enum AppTheme

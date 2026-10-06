@@ -1,4 +1,4 @@
-namespace RemouteAddressBook.Models
+namespace RemoteAccessAddressBook.Models
 {
     /// <summary>Ключи поддерживаемых инструментов удалённого доступа.</summary>
     public static class ToolKeys

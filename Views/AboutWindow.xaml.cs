@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
-using RemouteAddressBook.Services;
+using RemoteAccessAddressBook.Services;
 
-namespace RemouteAddressBook.Views
+namespace RemoteAccessAddressBook.Views
 {
     /// <summary>Окно «О приложении»: версия и расположение файлов данных.</summary>
     public partial class AboutWindow : Window

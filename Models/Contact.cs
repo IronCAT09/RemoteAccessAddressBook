@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace RemouteAddressBook.Models
+namespace RemoteAccessAddressBook.Models
 {
     /// <summary>Контакт адресной книги.</summary>
     public class Contact : INotifyPropertyChanged

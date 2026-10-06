@@ -5,11 +5,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using RemouteAddressBook.Models;
-using RemouteAddressBook.Services;
-using RemouteAddressBook.ViewModels;
+using RemoteAccessAddressBook.Models;
+using RemoteAccessAddressBook.Services;
+using RemoteAccessAddressBook.ViewModels;
 
-namespace RemouteAddressBook.Views
+namespace RemoteAccessAddressBook.Views
 {
     /// <summary>Главное окно приложения.</summary>
     public partial class MainWindow : Window

@@ -1,4 +1,4 @@
-<Window x:Class="RemouteAddressBook.Views.AboutWindow"
+<Window x:Class="RemoteAccessAddressBook.Views.AboutWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="О приложении"
@@ -26,7 +26,7 @@
                    RenderOptions.BitmapScalingMode="HighQuality" />
 
             <StackPanel Grid.Column="1" Margin="16,4,0,0">
-                <TextBlock Text="Remoute — Address Book"
+                <TextBlock Text="Remote Access — Address Book"
                            FontSize="18"
                            FontWeight="SemiBold"
                            Foreground="{DynamicResource TextBrush}" />

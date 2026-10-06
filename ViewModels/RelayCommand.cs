@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Input;
 
-namespace RemouteAddressBook.ViewModels
+namespace RemoteAccessAddressBook.ViewModels
 {
     /// <summary>Простая реализация ICommand на делегатах.</summary>
     public class RelayCommand : ICommand

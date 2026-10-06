@@ -1,4 +1,4 @@
-# Remoute — Address Book
+# Remote Access — Address Book
 
 Адресная книга для запуска сессий удалённого доступа (AnyDesk, Rudesktop, Ассистент,
 AmmyyAdmin, RDP). Аналог SiaBook.
@@ -19,7 +19,7 @@ dotnet build
 dotnet publish -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true
 ```
 
-Готовый файл: `bin\Release\net8.0-windows\win-x64\publish\RemouteAddressBook.exe`.
+Готовый файл: `bin\Release\net8.0-windows\win-x64\publish\RemoteAccessAddressBook.exe`.
 
 ## Где лежат данные
 

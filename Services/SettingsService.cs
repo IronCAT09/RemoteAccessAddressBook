@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Text.Json;
-using RemouteAddressBook.Models;
+using RemoteAccessAddressBook.Models;
 
-namespace RemouteAddressBook.Services
+namespace RemoteAccessAddressBook.Services
 {
     /// <summary>Загрузка и сохранение настроек в settings.json рядом с исполняемым файлом.</summary>
     public static class SettingsService

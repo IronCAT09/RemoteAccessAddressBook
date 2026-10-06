@@ -1,9 +1,9 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using RemouteAddressBook.Models;
+using RemoteAccessAddressBook.Models;
 
-namespace RemouteAddressBook.Services
+namespace RemoteAccessAddressBook.Services
 {
     /// <summary>Результат попытки запуска подключения.</summary>
     public class ConnectionResult

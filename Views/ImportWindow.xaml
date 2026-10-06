@@ -1,4 +1,4 @@
-<Window x:Class="RemouteAddressBook.Views.ImportWindow"
+<Window x:Class="RemoteAccessAddressBook.Views.ImportWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Импорт контактов"

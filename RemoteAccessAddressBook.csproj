@@ -7,8 +7,8 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
-    <AssemblyName>RemouteAddressBook</AssemblyName>
-    <RootNamespace>RemouteAddressBook</RootNamespace>
+    <AssemblyName>RemoteAccessAddressBook</AssemblyName>
+    <RootNamespace>RemoteAccessAddressBook</RootNamespace>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
     <Version>1.0.3</Version>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>

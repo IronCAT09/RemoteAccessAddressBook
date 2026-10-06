@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace RemouteAddressBook.Models
+namespace RemoteAccessAddressBook.Models
 {
     /// <summary>Настройки приложения (файл settings.json рядом с exe).</summary>
     public class AppSettings

@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Win32;
-using RemouteAddressBook.Models;
+using RemoteAccessAddressBook.Models;
 
-namespace RemouteAddressBook.Services
+namespace RemoteAccessAddressBook.Services
 {
     /// <summary>Поиск установленных программ удалённого доступа по стандартным путям.</summary>
     public static class ToolDiscoveryService

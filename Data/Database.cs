@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Data.Sqlite;
-using RemouteAddressBook.Models;
+using RemoteAccessAddressBook.Models;
 
-namespace RemouteAddressBook.Data
+namespace RemoteAccessAddressBook.Data
 {
     /// <summary>Доступ к базе данных SQLite.</summary>
     public class Database

@@ -1,6 +1,6 @@
 using System.Windows;
 
-namespace RemouteAddressBook.Views
+namespace RemoteAccessAddressBook.Views
 {
     /// <summary>Окно ввода одной строки (название группы или метки).</summary>
     public partial class TextPromptWindow : Window

@@ -1,9 +1,9 @@
 using System;
 using System.Windows;
 using Microsoft.Win32;
-using RemouteAddressBook.Models;
+using RemoteAccessAddressBook.Models;
 
-namespace RemouteAddressBook.Services
+namespace RemoteAccessAddressBook.Services
 {
     /// <summary>Переключение светлой и тёмной палитры на лету.</summary>
     public static class ThemeService

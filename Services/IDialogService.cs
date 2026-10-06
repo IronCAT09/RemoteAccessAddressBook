@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using RemouteAddressBook.Data;
-using RemouteAddressBook.Models;
+using RemoteAccessAddressBook.Data;
+using RemoteAccessAddressBook.Models;
 
-namespace RemouteAddressBook.Services
+namespace RemoteAccessAddressBook.Services
 {
     /// <summary>Абстракция над модальными окнами, чтобы модель представления не знала о View.</summary>
     public interface IDialogService

@@ -5,11 +5,11 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
-using RemouteAddressBook.Models;
-using RemouteAddressBook.Services;
-using RemouteAddressBook.ViewModels;
+using RemoteAccessAddressBook.Models;
+using RemoteAccessAddressBook.Services;
+using RemoteAccessAddressBook.ViewModels;
 
-namespace RemouteAddressBook.Views
+namespace RemoteAccessAddressBook.Views
 {
     /// <summary>Окно настроек приложения.</summary>
     public partial class SettingsWindow : Window

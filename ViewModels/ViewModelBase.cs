@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace RemouteAddressBook.ViewModels
+namespace RemoteAccessAddressBook.ViewModels
 {
     /// <summary>Базовый класс для моделей представления.</summary>
     public abstract class ViewModelBase : INotifyPropertyChanged

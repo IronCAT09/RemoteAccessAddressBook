@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Windows;
-using RemouteAddressBook.Data;
-using RemouteAddressBook.Models;
-using RemouteAddressBook.Services;
+using RemoteAccessAddressBook.Data;
+using RemoteAccessAddressBook.Models;
+using RemoteAccessAddressBook.Services;
 
-namespace RemouteAddressBook.Views
+namespace RemoteAccessAddressBook.Views
 {
     /// <summary>Реализация IDialogService поверх окон WPF.</summary>
     public class DialogService : IDialogService

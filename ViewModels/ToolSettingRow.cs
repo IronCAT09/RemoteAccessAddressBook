@@ -1,4 +1,4 @@
-namespace RemouteAddressBook.ViewModels
+namespace RemoteAccessAddressBook.ViewModels
 {
     /// <summary>Строка настроек одного инструмента в окне настроек.</summary>
     public class ToolSettingRow : ViewModelBase

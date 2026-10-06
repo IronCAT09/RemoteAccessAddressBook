@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace RemouteAddressBook.Converters
+namespace RemoteAccessAddressBook.Converters
 {
     /// <summary>null → Collapsed, любое значение → Visible.</summary>
     public class NullToVisibilityConverter : IValueConverter

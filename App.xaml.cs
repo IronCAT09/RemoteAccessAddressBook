@@ -2,7 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace RemouteAddressBook
+namespace RemoteAccessAddressBook
 {
     /// <summary>Точка входа приложения.</summary>
     public partial class App : Application
@@ -17,7 +17,7 @@ namespace RemouteAddressBook
         {
             MessageBox.Show(
                 "Непредвиденная ошибка:" + Environment.NewLine + e.Exception.Message,
-                "Remoute — Address Book",
+                "Remote Access — Address Book",
                 MessageBoxButton.OK,
                 MessageBoxImage.Error);
             e.Handled = true;

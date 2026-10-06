@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace RemouteAddressBook.Models
+namespace RemoteAccessAddressBook.Models
 {
     /// <summary>Метка (тег). У контакта может быть несколько меток.</summary>
     public class LabelItem : INotifyPropertyChanged

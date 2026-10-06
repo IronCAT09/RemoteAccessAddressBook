@@ -5,11 +5,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
-using RemouteAddressBook.Data;
-using RemouteAddressBook.Models;
-using RemouteAddressBook.Services;
+using RemoteAccessAddressBook.Data;
+using RemoteAccessAddressBook.Models;
+using RemoteAccessAddressBook.Services;
 
-namespace RemouteAddressBook.ViewModels
+namespace RemoteAccessAddressBook.ViewModels
 {
     /// <summary>Модель представления главного окна.</summary>
     public class MainViewModel : ViewModelBase

@@ -1,6 +1,6 @@
 using System.Windows.Media;
 
-namespace RemouteAddressBook.ViewModels
+namespace RemoteAccessAddressBook.ViewModels
 {
     /// <summary>Иконка программы над таблицей: найдена в системе или нет.</summary>
     public class ToolStatusItem : ViewModelBase

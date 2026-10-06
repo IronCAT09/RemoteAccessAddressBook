@@ -4,12 +4,12 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using Microsoft.Win32;
-using RemouteAddressBook.Data;
-using RemouteAddressBook.Models;
-using RemouteAddressBook.Services;
-using RemouteAddressBook.ViewModels;
+using RemoteAccessAddressBook.Data;
+using RemoteAccessAddressBook.Models;
+using RemoteAccessAddressBook.Services;
+using RemoteAccessAddressBook.ViewModels;
 
-namespace RemouteAddressBook.Views
+namespace RemoteAccessAddressBook.Views
 {
     /// <summary>Окно импорта контактов из CSV/XLSX.</summary>
     public partial class ImportWindow : Window
