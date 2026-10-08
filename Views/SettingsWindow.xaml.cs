@@ -29,6 +29,7 @@ namespace RemoteAccessAddressBook.Views
 
             ShowLabelsCheckBox.IsChecked = settings.ShowLabelsPanel;
             ShowGroupsCheckBox.IsChecked = settings.ShowGroupsPanel;
+            MinimizeToTrayCheckBox.IsChecked = settings.MinimizeToTray;
             DatabasePathBox.Text = settings.DatabasePath;
 
             _originalTheme = settings.Theme;
@@ -204,6 +205,7 @@ namespace RemoteAccessAddressBook.Views
             _settings.Theme = SelectedTheme();
             _settings.ShowLabelsPanel = ShowLabelsCheckBox.IsChecked == true;
             _settings.ShowGroupsPanel = ShowGroupsCheckBox.IsChecked == true;
+            _settings.MinimizeToTray = MinimizeToTrayCheckBox.IsChecked == true;
             _settings.DatabasePath = DatabasePathBox.Text.Trim();
 
             foreach (var row in _tools)

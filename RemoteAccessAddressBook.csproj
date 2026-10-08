@@ -4,13 +4,15 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <!-- WinForms нужен только для значка в трее (NotifyIcon) -->
+    <UseWindowsForms>true</UseWindowsForms>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
     <AssemblyName>RemoteAccessAddressBook</AssemblyName>
     <RootNamespace>RemoteAccessAddressBook</RootNamespace>
     <ApplicationIcon>Assets\app.ico</ApplicationIcon>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     <InvariantGlobalization>false</InvariantGlobalization>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
@@ -22,6 +24,12 @@
     <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.8" />
     <PackageReference Include="ClosedXML" Version="0.102.3" />
     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Без глобальных using WinForms: иначе конфликтуют MessageBox, Application, Button и т. п. -->
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
   </ItemGroup>
 
   <ItemGroup>

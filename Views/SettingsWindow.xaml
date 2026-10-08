@@ -22,6 +22,10 @@
             <TextBlock Text="Интерфейс" Style="{StaticResource PanelHeaderTextStyle}" Margin="0,0,0,6" />
             <CheckBox x:Name="ShowLabelsCheckBox" Content="Показывать панель меток" Margin="0,4" />
             <CheckBox x:Name="ShowGroupsCheckBox" Content="Показывать панель групп" Margin="0,4" />
+            <CheckBox x:Name="MinimizeToTrayCheckBox"
+                      Content="Сворачивать в трей"
+                      ToolTip="При сворачивании окно убирается с панели задач, а у часов появляется значок. Щелчок по значку открывает окно."
+                      Margin="0,4" />
 
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <TextBlock Text="Тема:" Style="{StaticResource FieldLabelStyle}" />

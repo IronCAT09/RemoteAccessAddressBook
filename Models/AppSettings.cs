@@ -47,6 +47,9 @@ namespace RemoteAccessAddressBook.Models
 
         public bool ShowPasswords { get; set; }
 
+        /// <summary>При сворачивании прятать окно и показывать значок в области уведомлений.</summary>
+        public bool MinimizeToTray { get; set; }
+
         /// <summary>Оформление интерфейса: System / Light / Dark.</summary>
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public AppTheme Theme { get; set; } = AppTheme.Light;

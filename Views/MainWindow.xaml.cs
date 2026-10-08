@@ -19,6 +19,10 @@ namespace RemoteAccessAddressBook.Views
         private Dictionary<DataGridColumn, string> _toolColumns;
         private Dictionary<string, DataGridColumn[]> _columnGroups;
         private DataGridColumn _contextMenuColumn;
+        private TrayIcon _trayIcon;
+
+        // Состояние до сворачивания: к нему окно возвращается из трея и оно же запоминается при выходе.
+        private WindowState _restoreState = WindowState.Normal;
 
         public MainWindow()
         {
@@ -71,6 +75,7 @@ namespace RemoteAccessAddressBook.Views
             ContactsGrid.ColumnReordered += OnColumnReordered;
             StateChanged += OnStateChanged;
             Closing += OnClosing;
+            _restoreState = WindowState == WindowState.Minimized ? WindowState.Normal : WindowState;
         }
 
         private void RestoreWindowPlacement()
@@ -210,7 +215,8 @@ namespace RemoteAccessAddressBook.Views
             SaveColumnWidths();
             _settings.ColumnOrder = CurrentColumnOrder();
 
-            _settings.WindowMaximized = WindowState == WindowState.Maximized;
+            var state = WindowState == WindowState.Minimized ? _restoreState : WindowState;
+            _settings.WindowMaximized = state == WindowState.Maximized;
             if (WindowState == WindowState.Normal)
             {
                 _settings.WindowLeft = Left;
@@ -227,10 +233,25 @@ namespace RemoteAccessAddressBook.Views
             }
 
             SettingsService.Save(_settings);
+
+            _trayIcon?.Dispose();
+            _trayIcon = null;
         }
 
         private void OnStateChanged(object sender, EventArgs e)
         {
+            if (WindowState == WindowState.Minimized)
+            {
+                if (_settings.MinimizeToTray)
+                {
+                    HideToTray();
+                }
+            }
+            else
+            {
+                _restoreState = WindowState;
+            }
+
             ApplyMaximizedMargin();
             MaximizeButton.Content = WindowState == WindowState.Maximized ? "" : "";
             MaximizeButton.ToolTip = WindowState == WindowState.Maximized ? "Восстановить" : "Развернуть";
@@ -269,6 +290,25 @@ namespace RemoteAccessAddressBook.Views
         }
 
         private void MinimizeButton_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+
+        /// <summary>«Сворачивать в трей»: окно прячется с панели задач, остаётся значок у часов.</summary>
+        private void HideToTray()
+        {
+            _trayIcon ??= new TrayIcon(Title, RestoreFromTray, Close);
+            _trayIcon.Visible = true;
+            Hide();
+        }
+
+        private void RestoreFromTray()
+        {
+            Show();
+            WindowState = _restoreState;
+            Activate();
+            if (_trayIcon != null)
+            {
+                _trayIcon.Visible = false;
+            }
+        }
 
         private void MaximizeButton_Click(object sender, RoutedEventArgs e) => ToggleMaximize();
 
