@@ -262,6 +262,20 @@ namespace RemoteAccessAddressBook.Services
         public static void StoreKey(CloudSettings settings, byte[] key) =>
             settings.ProtectedKey = SecretProtector.Protect(key);
 
+        /// <summary>
+        /// Удаляет локальный кэш облака. Вызывается и при подключении: кэш мог остаться от хранилища,
+        /// которое с тех пор сбросили, и тогда его чужой идентификатор выглядел бы как новый сброс
+        /// и стирал только что полученный ключ.
+        /// </summary>
+        public static void DeleteCache(CloudSettings settings)
+        {
+            var cache = CachePath(settings);
+            if (cache != null && File.Exists(cache))
+            {
+                File.Delete(cache);
+            }
+        }
+
         /// <summary>Отключение: токен отзывается на сервере, локальный кэш удаляется.</summary>
         public static async Task DisconnectAsync(CloudSettings settings)
         {
@@ -272,11 +286,7 @@ namespace RemoteAccessAddressBook.Services
                 await client.LogoutAsync();
             }
 
-            var cache = CachePath(settings);
-            if (cache != null && File.Exists(cache))
-            {
-                File.Delete(cache);
-            }
+            DeleteCache(settings);
 
             settings.ServerUrl = string.Empty;
             settings.Login = string.Empty;

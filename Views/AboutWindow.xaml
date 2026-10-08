@@ -54,6 +54,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="6" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="6" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Text="База данных" Style="{StaticResource FieldLabelStyle}" />
@@ -89,6 +91,17 @@
                        Grid.ColumnSpan="2"
                        VerticalAlignment="Center"
                        Foreground="{DynamicResource MutedTextBrush}" />
+
+            <TextBlock Grid.Row="6" Text="Исходный код" Style="{StaticResource FieldLabelStyle}" />
+            <TextBlock Grid.Row="6"
+                       Grid.Column="1"
+                       Grid.ColumnSpan="2"
+                       VerticalAlignment="Center">
+                <Hyperlink NavigateUri="https://github.com/IronCAT09/RemoteAccessAddressBook"
+                           Foreground="{DynamicResource AccentBrush}"
+                           ToolTip="Открыть в браузере"
+                           RequestNavigate="Repository_RequestNavigate">github.com/IronCAT09/RemoteAccessAddressBook</Hyperlink>
+            </TextBlock>
         </Grid>
 
         <Button Content="Закрыть"

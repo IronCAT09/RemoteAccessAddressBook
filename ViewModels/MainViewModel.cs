@@ -1430,6 +1430,8 @@ namespace RemoteAccessAddressBook.ViewModels
             // Отчёт — после снятия блокировки: пока окно открыто, изменения коллег продолжают подтягиваться.
             if (report != null)
             {
+                StatusText = (toCloud ? "Скопировано в облако: " : "Скопировано в локальную базу: ") +
+                             report.Added + ", заменено: " + report.Replaced;
                 _dialogs.Info(report.ToText(toCloud), "Синхронизация");
             }
         }
@@ -1689,6 +1691,8 @@ namespace RemoteAccessAddressBook.ViewModels
                 CloudStore.StoreKey(cloud, key);
                 SettingsService.Save(Settings);
 
+                // Ключ получен для хранилища, которое на сервере сейчас: кэш перечитываем с нуля.
+                CloudStore.DeleteCache(cloud);
                 _cloud = new CloudStore(Settings.Cloud);
                 await _cloud.PollAsync();
                 ReloadAll();

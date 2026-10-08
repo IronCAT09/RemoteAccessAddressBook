@@ -21,6 +21,21 @@ namespace RemoteAccessAddressBook.Views
                                RuntimeInformation.OSDescription.Trim();
         }
 
+        private void Repository_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, "Не удалось открыть браузер: " + ex.Message, "О приложении",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
+
+            e.Handled = true;
+        }
+
         private void OpenDatabaseFolder_Click(object sender, RoutedEventArgs e) => ShowInExplorer(DatabasePathBox.Text);
 
         private void OpenSettingsFolder_Click(object sender, RoutedEventArgs e) => ShowInExplorer(SettingsPathBox.Text);
